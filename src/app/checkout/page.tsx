@@ -76,7 +76,7 @@ export default function CheckoutPage() {
           <div className="text-center py-6 bg-accent/10 rounded-lg">
              <div className="flex justify-center mb-4">
               <div className="relative flex items-center justify-center w-40 h-40">
-                <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
+                <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse"></div>
                 <div className="relative flex items-center justify-center w-32 h-32 bg-primary/90 text-primary-foreground rounded-full shadow-lg">
                   <Wifi className="w-20 h-20" />
                 </div>
