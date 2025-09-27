@@ -16,8 +16,8 @@ export default function GlobalHeader() {
         <Image
           src="/usj.png"
           alt="Logo"
-          width={100}
-          height={40}
+          width={125}
+          height={50}
           className="object-contain"
           priority
         />
