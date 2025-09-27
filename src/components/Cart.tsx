@@ -13,9 +13,15 @@ import {
 import { Separator } from "@/components/ui/separator";
 import CartItem from "./CartItem";
 import { ShoppingCart, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
-  const { cartItems, total, clearCart, checkout, itemCount } = useCart();
+  const { cartItems, total, clearCart, itemCount } = useCart();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    router.push('/checkout');
+  }
 
   return (
     <Card className="shadow-lg">
@@ -59,7 +65,7 @@ export default function Cart() {
             <span>${total.toFixed(2)}</span>
           </div>
           <Button
-            onClick={checkout}
+            onClick={handleCheckout}
             className="w-full h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90"
           >
             Checkout ({itemCount} {itemCount > 1 ? 'items' : 'item'})

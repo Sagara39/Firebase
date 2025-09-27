@@ -3,6 +3,7 @@
 import type { CartItem, MenuItem } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -20,6 +21,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -99,6 +101,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           description: result.message,
         });
         clearCart();
+        router.push('/');
       } else {
         throw new Error(result.message || "Something went wrong");
       }
