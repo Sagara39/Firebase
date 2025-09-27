@@ -5,7 +5,7 @@ import GlobalHeader from "@/components/GlobalHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Canteen Ordering System",
+  title: "ABIDS",
   description: "A tablet-friendly customer UI for a college canteen.",
 };
 

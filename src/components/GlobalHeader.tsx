@@ -1,4 +1,5 @@
 import { UtensilsCrossed } from "lucide-react";
+import Image from "next/image";
 
 export default function GlobalHeader() {
   return (
@@ -9,9 +10,17 @@ export default function GlobalHeader() {
             <UtensilsCrossed className="w-6 h-6 text-primary-foreground" />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-primary-foreground">
-            Canteen Ordering
+            ABIDS
           </h1>
         </div>
+        <Image
+          src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Grand_Theft_Auto_logo.svg"
+          alt="Logo"
+          width={100}
+          height={40}
+          className="object-contain"
+          priority
+        />
       </div>
     </header>
   );
