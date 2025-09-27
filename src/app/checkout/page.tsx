@@ -25,31 +25,31 @@ export default function CheckoutPage() {
   if (itemCount === 0) {
     // Render a loading/redirecting state to avoid showing an empty checkout page
     return (
-        <div className="flex h-screen items-center justify-center">
-            <p>Your cart is empty. Redirecting...</p>
+        <div className="flex h-screen items-center justify-center bg-background">
+            <p className="text-muted-foreground">Your cart is empty. Redirecting...</p>
         </div>
     );
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] items-center justify-center p-4">
-      <Card className="w-full max-w-2xl shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl md:text-3xl">Checkout</CardTitle>
-          <CardDescription>Review your order and tap your RFID card to pay.</CardDescription>
+    <div className="flex h-[calc(100vh-4rem)] items-center justify-center p-4 bg-muted/40">
+      <Card className="w-full max-w-2xl shadow-2xl rounded-2xl overflow-hidden">
+        <CardHeader className="bg-background/95 p-6">
+          <CardTitle className="text-2xl md:text-3xl font-bold">Confirm Your Order</CardTitle>
+          <CardDescription>Review your items and tap your card to pay.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="p-6 space-y-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2">Order Summary</h3>
-            <div className="max-h-48 overflow-y-auto rounded-md border p-2 space-y-2">
+            <h3 className="text-lg font-semibold mb-3 text-foreground">Order Summary</h3>
+            <div className="max-h-48 overflow-y-auto rounded-lg border bg-background/50 p-2 space-y-2">
               {cartItems.map(item => (
-                <div key={item.id} className="flex items-center gap-4">
+                <div key={item.id} className="flex items-center gap-4 p-2 rounded-md hover:bg-muted/50 transition-colors">
                   <Image
                     src={item.image}
                     alt={item.name}
                     width={56}
                     height={56}
-                    className="rounded-md object-cover"
+                    className="rounded-lg object-cover"
                     data-ai-hint={item.imageHint}
                   />
                   <div className="flex-grow">
@@ -58,7 +58,7 @@ export default function CheckoutPage() {
                       {item.quantity} x ${item.price.toFixed(2)}
                     </p>
                   </div>
-                  <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold text-lg text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -66,37 +66,41 @@ export default function CheckoutPage() {
 
           <Separator />
 
-          <div className="flex justify-between items-center font-bold text-lg">
+          <div className="flex justify-between items-center font-bold text-xl">
             <span>Total ({itemCount} {itemCount > 1 ? 'items' : 'item'})</span>
             <span>${total.toFixed(2)}</span>
           </div>
 
           <Separator />
 
-          <div className="text-center py-4">
-            <div className="flex justify-center mb-4">
-              <div className="relative flex items-center justify-center w-36 h-36 bg-muted rounded-full animate-pulse">
-                <Wifi className="w-20 h-20 text-muted-foreground/50" />
+          <div className="text-center py-6 bg-accent/10 rounded-lg">
+             <div className="flex justify-center mb-4">
+              <div className="relative flex items-center justify-center w-40 h-40">
+                <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
+                <div className="relative flex items-center justify-center w-32 h-32 bg-primary/90 text-primary-foreground rounded-full shadow-lg">
+                  <Wifi className="w-20 h-20" />
+                </div>
               </div>
             </div>
-            <h3 className="text-xl font-bold text-primary">
+            <h3 className="text-2xl font-bold text-primary">
               Tap Your RFID Card to Pay
             </h3>
+            <p className="text-muted-foreground mt-1">Hold your card near the reader.</p>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-2">
+        <CardFooter className="flex flex-col sm:flex-row gap-4 bg-muted/30 p-6">
             <Button
                 onClick={() => router.push('/')}
                 variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto text-lg h-12"
             >
                 Cancel
             </Button>
             <Button
                 onClick={checkout}
-                className="w-full sm:flex-grow h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90"
+                className="w-full sm:flex-grow h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-md hover:shadow-lg transition-shadow"
             >
-                Simulate Payment
+                Simulate RFID Payment
             </Button>
         </CardFooter>
       </Card>
