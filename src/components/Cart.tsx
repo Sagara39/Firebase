@@ -44,7 +44,7 @@ export default function Cart() {
             <p className="text-sm text-muted-foreground/80">Add items from the menu to get started.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 max-h-[40vh] overflow-y-auto p-1">
             {cartItems.map((item) => (
               <CartItem key={item.id} item={item} />
             ))}
@@ -52,7 +52,7 @@ export default function Cart() {
         )}
       </CardContent>
       {cartItems.length > 0 && (
-        <CardFooter className="flex flex-col gap-4 p-4">
+        <CardFooter className="flex flex-col gap-4 p-4 border-t">
           <Separator />
           <div className="w-full flex justify-between items-center font-bold text-lg">
             <span>Total</span>
