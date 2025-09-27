@@ -14,7 +14,7 @@ export default function GlobalHeader() {
           </h1>
         </div>
         <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Grand_Theft_Auto_logo.svg"
+          src="/usj.png"
           alt="Logo"
           width={100}
           height={40}
