@@ -4,10 +4,6 @@ import type { CartItem, MenuItem } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useFirestore } from '@/firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -26,7 +22,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const router = useRouter();
-  const firestore = useFirestore();
 
   useEffect(() => {
     try {
@@ -81,36 +76,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCartItems([]);
   };
 
-  const checkout = async () => {
-    if (!firestore) {
-      toast({
-        variant: 'destructive',
-        title: 'Order Failed',
-        description: 'Could not connect to the database.',
-      });
-      return;
-    }
-
-    const ordersCollection = collection(firestore, 'orders');
-    const orderData = {
-      orderDate: serverTimestamp(),
-      totalAmount: total,
-      orderItems: cartItems.map((item) => ({
-        menuItemId: item.id,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-    };
-
-    addDoc(ordersCollection, orderData).catch((error) => {
-      const contextualError = new FirestorePermissionError({
-        operation: 'create',
-        path: ordersCollection.path,
-        requestResourceData: orderData,
-      });
-      errorEmitter.emit('permission-error', contextualError);
+  const checkout = () => {
+    console.log('Simulating checkout with:', {
+      cartItems,
+      total,
+      itemCount,
     });
-
     toast({
       title: 'Order Placed!',
       description: 'Your order has been received and is being prepared!',
