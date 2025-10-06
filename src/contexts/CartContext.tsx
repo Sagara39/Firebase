@@ -5,11 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFirestore } from '@/firebase';
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
@@ -94,7 +90,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return;
     }
-    
+
     const ordersCollection = collection(firestore, 'orders');
     const orderData = {
       orderDate: serverTimestamp(),
@@ -107,12 +103,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     addDoc(ordersCollection, orderData).catch((error) => {
-        const contextualError = new FirestorePermissionError({
-            operation: 'create',
-            path: ordersCollection.path,
-            requestResourceData: orderData,
-        });
-        errorEmitter.emit('permission-error', contextualError);
+      const contextualError = new FirestorePermissionError({
+        operation: 'create',
+        path: ordersCollection.path,
+        requestResourceData: orderData,
+      });
+      errorEmitter.emit('permission-error', contextualError);
     });
 
     toast({
