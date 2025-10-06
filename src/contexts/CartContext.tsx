@@ -10,7 +10,7 @@ import {
   collection,
   serverTimestamp,
 } from 'firebase/firestore';
-import { addDocumentNonBlocking } from '@/firebase';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 interface CartContextType {
   cartItems: CartItem[];
