@@ -1,37 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import type { MenuItem } from "@/lib/types";
-import MenuItemCard from "@/components/MenuItemCard";
-import MenuItemSkeleton from "@/components/MenuItemSkeleton";
+import { useMemo } from 'react';
+import type { MenuItem } from '@/lib/types';
+import MenuItemCard from '@/components/MenuItemCard';
+import MenuItemSkeleton from '@/components/MenuItemSkeleton';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
 export default function Menu() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const firestore = useFirestore();
+  const menuItemsCollection = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'menu_items') : null),
+    [firestore]
+  );
+  const {
+    data: menuItems,
+    isLoading,
+    error,
+  } = useCollection<MenuItem>(menuItemsCollection);
 
-  useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const response = await fetch("/api/menu");
-        if (!response.ok) {
-          throw new Error("Failed to fetch menu");
-        }
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMenu();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -44,14 +32,14 @@ export default function Menu() {
   if (error) {
     return (
       <div className="flex items-center justify-center h-64 bg-card rounded-lg">
-        <p className="text-destructive">{error}</p>
+        <p className="text-destructive">{error.message}</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-      {menuItems.map((item) => (
+    <div className="grid grid-cols-1 sm-grid-cols-2 xl:grid-cols-3 gap-6">
+      {menuItems?.map((item) => (
         <MenuItemCard key={item.id} item={item} />
       ))}
     </div>

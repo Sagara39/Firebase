@@ -1,9 +1,16 @@
-"use client";
+'use client';
 
-import type { CartItem, MenuItem } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import type { CartItem, MenuItem } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useFirestore } from '@/firebase';
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { addDocumentNonBlocking } from '@/firebase';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -22,23 +29,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const router = useRouter();
+  const firestore = useFirestore();
 
   useEffect(() => {
     try {
-      const storedCart = localStorage.getItem("canteen-cart");
+      const storedCart = localStorage.getItem('canteen-cart');
       if (storedCart) {
         setCartItems(JSON.parse(storedCart));
       }
     } catch (error) {
-      console.error("Failed to parse cart from localStorage", error);
+      console.error('Failed to parse cart from localStorage', error);
     }
   }, []);
 
   useEffect(() => {
     try {
-      localStorage.setItem("canteen-cart", JSON.stringify(cartItems));
+      localStorage.setItem('canteen-cart', JSON.stringify(cartItems));
     } catch (error) {
-      console.error("Failed to save cart to localStorage", error);
+      console.error('Failed to save cart to localStorage', error);
     }
   }, [cartItems]);
 
@@ -53,7 +61,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       return [...prevItems, { ...item, quantity: 1 }];
     });
     toast({
-      title: "Added to cart",
+      title: 'Added to cart',
       description: `${item.name} has been added to your order.`,
     });
   };
@@ -77,39 +85,41 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const checkout = async () => {
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: cartItems.map(({ id, name, price, quantity }) => ({
-            id,
-            name,
-            price,
-            quantity,
-          })),
-          total,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "Order Placed!",
-          description: result.message,
-        });
-        clearCart();
-        router.push('/');
-      } else {
-        throw new Error(result.message || "Something went wrong");
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    if (!firestore) {
       toast({
-        variant: "destructive",
-        title: "Order Failed",
+        variant: 'destructive',
+        title: 'Order Failed',
+        description: 'Could not connect to the database.',
+      });
+      return;
+    }
+    try {
+      const orderData = {
+        orderDate: serverTimestamp(),
+        totalAmount: total,
+        orderItems: cartItems.map((item) => ({
+          menuItemId: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      };
+
+      const ordersCollection = collection(firestore, 'orders');
+      addDocumentNonBlocking(ordersCollection, orderData);
+
+      toast({
+        title: 'Order Placed!',
+        description: 'Your order has been received and is being prepared!',
+      });
+      clearCart();
+      router.push('/');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      toast({
+        variant: 'destructive',
+        title: 'Order Failed',
         description: errorMessage,
       });
     }
@@ -119,11 +129,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  
-  const itemCount = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+
+  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -146,7 +153,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider");
+    throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 };

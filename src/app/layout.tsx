@@ -3,6 +3,8 @@ import { CartProvider } from "@/contexts/CartContext";
 import { Toaster } from "@/components/ui/toaster";
 import GlobalHeader from "@/components/GlobalHeader";
 import "./globals.css";
+import { FirebaseClientProvider } from "@/firebase";
+import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
 
 export const metadata: Metadata = {
   title: "ABIDS",
@@ -22,13 +24,16 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <CartProvider>
-          <GlobalHeader />
-          <div className="pt-16">
-            {children}
-          </div>
-          <Toaster />
-        </CartProvider>
+        <FirebaseClientProvider>
+          <CartProvider>
+            <GlobalHeader />
+            <div className="pt-16">
+              {children}
+            </div>
+            <Toaster />
+            <FirebaseErrorListener />
+          </CartProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

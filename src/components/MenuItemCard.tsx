@@ -22,7 +22,7 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
       <CardHeader className="p-0">
         <div className="aspect-video relative">
           <Image
-            src={item.image}
+            src={item.imageUrl}
             alt={item.name}
             fill
             className="object-cover"
