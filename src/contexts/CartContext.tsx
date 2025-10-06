@@ -10,6 +10,8 @@ import {
   collection,
   serverTimestamp,
 } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -92,36 +94,33 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return;
     }
-    try {
-      const orderData = {
-        orderDate: serverTimestamp(),
-        totalAmount: total,
-        orderItems: cartItems.map((item) => ({
-          menuItemId: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      };
+    
+    const ordersCollection = collection(firestore, 'orders');
+    const orderData = {
+      orderDate: serverTimestamp(),
+      totalAmount: total,
+      orderItems: cartItems.map((item) => ({
+        menuItemId: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
 
-      const ordersCollection = collection(firestore, 'orders');
-      await addDoc(ordersCollection, orderData);
+    addDoc(ordersCollection, orderData).catch((error) => {
+        const contextualError = new FirestorePermissionError({
+            operation: 'create',
+            path: ordersCollection.path,
+            requestResourceData: orderData,
+        });
+        errorEmitter.emit('permission-error', contextualError);
+    });
 
-      toast({
-        title: 'Order Placed!',
-        description: 'Your order has been received and is being prepared!',
-      });
-      clearCart();
-      router.push('/');
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      toast({
-        variant: 'destructive',
-        title: 'Order Failed',
-        description: errorMessage,
-      });
-    }
+    toast({
+      title: 'Order Placed!',
+      description: 'Your order has been received and is being prepared!',
+    });
+    clearCart();
+    router.push('/');
   };
 
   const total = cartItems.reduce(
