@@ -10,7 +10,6 @@ import {
   collection,
   serverTimestamp,
 } from 'firebase/firestore';
-import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -106,7 +105,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       };
 
       const ordersCollection = collection(firestore, 'orders');
-      addDocumentNonBlocking(ordersCollection, orderData);
+      await addDoc(ordersCollection, orderData);
 
       toast({
         title: 'Order Placed!',
