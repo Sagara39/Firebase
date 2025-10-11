@@ -16,13 +16,14 @@ import { PlusCircle } from "lucide-react";
 
 export default function MenuItemCard({ item }: { item: MenuItem }) {
   const { addToCart } = useCart();
+  const imageUrl = item.imageUrl || "https://placehold.co/600x400";
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <CardHeader className="p-0">
         <div className="aspect-video relative">
           <Image
-            src={item.imageUrl}
+            src={imageUrl}
             alt={item.name}
             fill
             className="object-cover"
