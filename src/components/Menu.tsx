@@ -5,6 +5,7 @@ import MenuItemCard from '@/components/MenuItemCard';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import MenuItemSkeleton from './MenuItemSkeleton';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Menu() {
   const firestore = useFirestore();
@@ -12,8 +13,17 @@ export default function Menu() {
     () => (firestore ? collection(firestore, 'inventory') : null),
     [firestore]
   );
-  const { data: menuItems, isLoading } =
+  const { data: menuItemsFromDb, isLoading } =
     useCollection<MenuItem>(inventoryCollection);
+
+  const menuItems = menuItemsFromDb?.map(item => {
+    const localImage = PlaceHolderImages.find(img => img.id === item.id);
+    return {
+      ...item,
+      imageUrl: localImage?.imageUrl || item.imageUrl || 'https://placehold.co/600x400',
+      imageHint: localImage?.imageHint || item.imageHint || 'placeholder',
+    };
+  });
 
   if (isLoading) {
     return (

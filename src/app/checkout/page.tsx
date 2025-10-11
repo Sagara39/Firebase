@@ -45,7 +45,7 @@ export default function CheckoutPage() {
               {cartItems.map(item => (
                 <div key={item.id} className="flex items-center gap-4 p-2 rounded-md hover:bg-muted/50 transition-colors">
                   <Image
-                    src={item.image}
+                    src={item.imageUrl}
                     alt={item.name}
                     width={56}
                     height={56}
