@@ -2,55 +2,72 @@
  * @fileoverview Firestore Security Rules for the canteen ordering system.
  *
  * Core Philosophy:
- * This ruleset prioritizes simplicity, scalability and security. The design assumes no specific authorization context (e.g., user roles) is required.  Write access to menu items and orders is completely forbidden. Read access is public.
+ * This ruleset prioritizes simplicity and security for a canteen ordering system.
+ * It provides public read access to menu items and restricts write access to orders and order items.
  *
  * Data Structure:
- * - /menu_items/{menuItemId}: Stores menu items.
- * - /orders/{orderId}: Stores orders.
- * - /orders/{orderId}/order_items/{orderItemId}: Stores individual order items.
+ * The database consists of three top-level collections: `menuItems`, `orders`, and `orderItems`.
+ *  - `menuItems`: Contains publicly accessible information about menu items.
+ *  - `orders`: Contains order information.
+ *  - `orderItems`: Contains individual items within an order.
  *
  * Key Security Decisions:
- * - Menu items and orders are publicly readable, but write access is denied.
- * - No user-specific data or roles are used in this version.
+ *  - Menu items are publicly readable, as they are not user-specific.
+ *  - Orders and order items require authentication for any operation.  However, there is no validation logic implemented for write operations.
+ *
+ * Denormalization for Authorization:
+ *  - No denormalization is used in this simplified model. All write operations are protected only by authentication.
+ *
+ * Structural Segregation:
+ *  - The separation of `menuItems` from `orders` and `orderItems` allows for public read access to the menu without exposing order data.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to menu items, but denies all write access.
-     * @path /menu_items/{menuItemId}
-     * @allow get, list: Anyone can read menu items.
-     * @deny create, update, delete: No one can create, update, or delete menu items.
-     * @principle Menu items are publicly readable and not user-modifiable.
+     * @description Allows public read access to menu items.
+     * @path /menuItems/{menuItemId}
+     * @allow (get, list) Any user can read menu items.
+     * @deny (create, update, delete) No user can create, update, or delete menu items through the client.
+     * @principle Grants public read access to non-sensitive data, while restricting write access.
      */
-    match /menu_items/{menuItemId} {
+    match /menuItems/{menuItemId} {
       allow get, list: if true;
       allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to orders, but denies all write access.
+     * @description Restricts access to orders.
      * @path /orders/{orderId}
-     * @allow get, list: Anyone can read orders.
-     * @deny create, update, delete: No one can create, update, or delete orders.
-     * @principle Orders are publicly readable and not user-modifiable.
+     * @allow (create) Any authenticated user can create an order.
+     * @allow (get, list) Any authenticated user can read orders.
+     * @deny (update, delete) No user can update or delete orders through the client.
+     * @principle Requires authentication for order creation.
      */
     match /orders/{orderId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to order items, but denies all write access.
-     * @path /orders/{orderId}/order_items/{orderItemId}
-     * @allow get, list: Anyone can read order items.
-     * @deny create, update, delete: No one can create, update, or delete order items.
-     * @principle Order items are publicly readable and not user-modifiable.
+     * @description Restricts access to order items.
+     * @path /orderItems/{orderItemId}
+     * @allow (create) Any authenticated user can create an order item.
+     * @allow (get, list) Any authenticated user can read order items.
+     * @deny (update, delete) No user can update or delete order items through the client.
+     * @principle Requires authentication for order item creation.
      */
-    match /orders/{orderId}/order_items/{orderItemId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
+    match /orderItems/{orderItemId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    // Helper function to check if the user is signed in.
+    function isSignedIn() {
+      return request.auth != null;
     }
   }
 }
