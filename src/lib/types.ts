@@ -17,7 +17,6 @@ export type Order = {
   totalAmount: number;
   orderItems: {
     menuItemId: string;
-    name: string;
     quantity: number;
     price: number;
   }[];

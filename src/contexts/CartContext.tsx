@@ -1,9 +1,12 @@
 'use client';
 
-import type { CartItem, MenuItem } from '@/lib/types';
+import type { CartItem, MenuItem, Order } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFirestore, useUser } from '@/firebase';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -22,6 +25,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const router = useRouter();
+  const firestore = useFirestore();
+  const { user } = useUser();
 
   useEffect(() => {
     try {
@@ -43,10 +48,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, [cartItems]);
 
   const addToCart = (item: MenuItem) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(i => i.id === item.id);
       if (existingItem) {
-        return prevItems.map((i) =>
+        return prevItems.map(i =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
@@ -59,15 +64,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const removeFromCart = (itemId: string) => {
-    setCartItems((prevItems) => prevItems.filter((i) => i.id !== itemId));
+    setCartItems(prevItems => prevItems.filter(i => i.id !== itemId));
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(itemId);
     } else {
-      setCartItems((prevItems) =>
-        prevItems.map((i) => (i.id === itemId ? { ...i, quantity } : i))
+      setCartItems(prevItems =>
+        prevItems.map(i => (i.id === itemId ? { ...i, quantity } : i))
       );
     }
   };
@@ -77,11 +82,28 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const checkout = () => {
-    console.log('Simulating checkout with:', {
-      cartItems,
-      total,
-      itemCount,
-    });
+    if (!firestore) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not connect to the database.',
+      });
+      return;
+    }
+
+    const order: Omit<Order, 'id'> = {
+      orderDate: serverTimestamp(),
+      totalAmount: total,
+      orderItems: cartItems.map(item => ({
+        menuItemId: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
+
+    const ordersCollection = collection(firestore, 'orders');
+    addDocumentNonBlocking(ordersCollection, order);
+    
     toast({
       title: 'Order Placed!',
       description: 'Your order has been received and is being prepared!',
