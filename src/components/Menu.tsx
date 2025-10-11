@@ -17,7 +17,8 @@ export default function Menu() {
     useCollection<MenuItem>(inventoryCollection);
 
   const menuItems = menuItemsFromDb?.map(item => {
-    const localImage = PlaceHolderImages.find(img => img.id === item.id);
+    // Match by name for more robust image mapping
+    const localImage = PlaceHolderImages.find(img => img.name.toLowerCase() === item.name.toLowerCase());
     return {
       ...item,
       imageUrl: localImage?.imageUrl || '/placeholder.png',
