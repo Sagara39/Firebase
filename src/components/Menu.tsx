@@ -20,8 +20,8 @@ export default function Menu() {
     const localImage = PlaceHolderImages.find(img => img.id === item.id);
     return {
       ...item,
-      imageUrl: localImage?.imageUrl || item.imageUrl || 'https://placehold.co/600x400',
-      imageHint: localImage?.imageHint || item.imageHint || 'placeholder',
+      imageUrl: localImage?.imageUrl || 'https://placehold.co/600x400',
+      imageHint: localImage?.imageHint || 'placeholder',
     };
   });
 

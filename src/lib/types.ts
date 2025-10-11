@@ -9,7 +9,6 @@ export type MenuItem = {
 
 export type CartItem = MenuItem & {
   quantity: number;
-  image: string;
 };
 
 export type Order = {
