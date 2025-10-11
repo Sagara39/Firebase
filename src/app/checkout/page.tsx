@@ -8,6 +8,7 @@ import { Wifi } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function CheckoutPage() {
   const { cartItems, total, itemCount, checkout } = useCart();
@@ -42,25 +43,30 @@ export default function CheckoutPage() {
           <div>
             <h3 className="text-lg font-semibold mb-3 text-foreground">Order Summary</h3>
             <div className="max-h-48 overflow-y-auto rounded-lg border bg-background/50 p-2 space-y-2">
-              {cartItems.map(item => (
-                <div key={item.id} className="flex items-center gap-4 p-2 rounded-md hover:bg-muted/50 transition-colors">
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.name}
-                    width={56}
-                    height={56}
-                    className="rounded-lg object-cover"
-                    data-ai-hint={item.imageHint}
-                  />
-                  <div className="flex-grow">
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {item.quantity} x Rs.{item.price.toFixed(2)}
-                    </p>
+              {cartItems.map(item => {
+                const localImage = PlaceHolderImages.find(img => img.name.toLowerCase() === item.name.toLowerCase());
+                const imageUrl = localImage?.imageUrl || '/placeholder.png';
+                const imageHint = localImage?.imageHint || 'placeholder';
+                return (
+                  <div key={item.id} className="flex items-center gap-4 p-2 rounded-md hover:bg-muted/50 transition-colors">
+                    <Image
+                      src={imageUrl}
+                      alt={item.name}
+                      width={56}
+                      height={56}
+                      className="rounded-lg object-cover"
+                      data-ai-hint={imageHint}
+                    />
+                    <div className="flex-grow">
+                      <p className="font-semibold">{item.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.quantity} x Rs.{item.price.toFixed(2)}
+                      </p>
+                    </div>
+                    <p className="font-bold text-lg text-foreground">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                   </div>
-                  <p className="font-bold text-lg text-foreground">Rs.{(item.price * item.quantity).toFixed(2)}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

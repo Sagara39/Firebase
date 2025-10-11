@@ -5,10 +5,14 @@ import type { CartItem } from "@/lib/types";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function CartItemComponent({ item }: { item: CartItem }) {
   const { updateQuantity, removeFromCart } = useCart();
-  const imageUrl = item.imageUrl || "/placeholder.png";
+  const localImage = PlaceHolderImages.find(img => img.name.toLowerCase() === item.name.toLowerCase());
+  const imageUrl = localImage?.imageUrl || "/placeholder.png";
+  const imageHint = localImage?.imageHint || "placeholder";
+
 
   return (
     <div className="flex items-center gap-4">
@@ -18,7 +22,7 @@ export default function CartItemComponent({ item }: { item: CartItem }) {
         width={64}
         height={64}
         className="rounded-md object-cover"
-        data-ai-hint={item.imageHint}
+        data-ai-hint={imageHint}
       />
       <div className="flex-grow">
         <p className="font-semibold">{item.name}</p>
