@@ -8,7 +8,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 
 export default function CartItemComponent({ item }: { item: CartItem }) {
   const { updateQuantity, removeFromCart } = useCart();
-  const imageUrl = item.imageUrl || "https://placehold.co/600x400";
+  const imageUrl = item.imageUrl || "/placeholder.png";
 
   return (
     <div className="flex items-center gap-4">
