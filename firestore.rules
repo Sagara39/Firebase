@@ -1,60 +1,61 @@
 /**
- * @fileoverview Firestore Security Rules for the college canteen ordering system.
+ * @fileOverview Firestore Security Rules for the college canteen ordering system.
  *
  * Core Philosophy:
- * This ruleset allows any authenticated user to create, read, update, and delete all documents in the Firestore database.
+ * This ruleset prioritizes simplicity and security. It uses a combination of public read access for static content (menu items) and authenticated access for user-specific data (orders).
  *
  * Data Structure:
- * The database consists of three top-level collections: `/menuItems/{menuItemId}`, `/orders/{orderId}`, and `/orderItems/{orderItemId}`.
+ * - /menuItems/{menuItemId}: Publicly readable collection of menu items.
+ * - /orders/{orderId}: Collection of user orders, accessible only to authenticated users.
+ * - /orderItems/{orderItemId}: Collection of order items, accessible only to authenticated users.
  *
  * Key Security Decisions:
- * This ruleset allows unrestricted access to all data for any authenticated user.
- *
+ * - Menu items are publicly readable to simplify the app experience.
+ * - Orders are only accessible to authenticated users.
+ * - No user listing is allowed.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Rules for the /menuItems collection. Allows any authenticated user to read, create, update, and delete menu items.
+     * @description Grants public read access to menu items. Writes are disallowed.
      * @path /menuItems/{menuItemId}
-     * @allow (get, list) Any authenticated user can read any menu item.
-     * @allow (create, update, delete) Any authenticated user can create, update, and delete menu items.
-     * @deny (none) No requests are explicitly denied in this configuration.
-     * @principle Allows any authenticated user full access to menu items.
+     * @allow (get, list) Any user can read menu items.
+     * @deny (create, update, delete) No user can create, update, or delete menu items through the client.  Data should be managed via the Firebase Admin SDK.
+     * @principle Allows public read access for static menu data.
      */
     match /menuItems/{menuItemId} {
-      allow get, list: if isSignedIn();
-      allow create, update, delete: if isSignedIn();
+      allow get, list: if true;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Rules for the /orders collection. Allows any authenticated user to read, create, update, and delete orders.
+     * @description Grants authenticated users full access to their own orders.
      * @path /orders/{orderId}
-     * @allow (get, list) Any authenticated user can read any order.
-     * @allow (create, update, delete) Any authenticated user can create, update, and delete orders.
-     * @deny (none) No requests are explicitly denied in this configuration.
-     * @principle Allows any authenticated user full access to orders.
+     * @allow (create) An authenticated user can create an order.
+     * @allow (get, list) An authenticated user can read their own orders.
+     * @allow (update, delete) An authenticated user can update or delete their own orders.
+     * @deny (create, update, delete) An unauthenticated user cannot create, update, or delete orders.
+     * @principle Enforces user-specific access to orders based on authentication.
      */
     match /orders/{orderId} {
-      allow get, list: if isSignedIn();
-      allow create, update, delete: if isSignedIn();
+      allow read, create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Rules for the /orderItems collection. Allows any authenticated user to read, create, update, and delete order items.
+     * @description Grants authenticated users full access to order items.
      * @path /orderItems/{orderItemId}
-     * @allow (get, list) Any authenticated user can read any order item.
-     * @allow (create, update, delete) Any authenticated user can create, update, and delete order items.
-     * @deny (none) No requests are explicitly denied in this configuration.
-     * @principle Allows any authenticated user full access to order items.
+     * @allow (create) An authenticated user can create an order item.
+     * @allow (get, list) An authenticated user can read order items.
+     * @allow (update, delete) An authenticated user can update or delete order items.
+     * @deny (create, update, delete) An unauthenticated user cannot create, update, or delete order items.
+     * @principle Enforces user-specific access to order items based on authentication.
      */
     match /orderItems/{orderItemId} {
-      allow get, list: if isSignedIn();
-      allow create, update, delete: if isSignedIn();
+      allow read, create, update, delete: if isSignedIn();
     }
 
-    // Helper function to determine if a user is signed in.
     function isSignedIn() {
       return request.auth != null;
     }
