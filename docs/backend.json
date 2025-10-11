@@ -114,17 +114,17 @@
   "firestore": {
     "structure": [
       {
-        "path": "/menuItems/{menuItemId}",
+        "path": "/inventory/{itemId}",
         "definition": {
           "entityName": "MenuItem",
           "schema": {
             "$ref": "#/backend/entities/MenuItem"
           },
-          "description": "Collection of menu items available in the canteen.",
+          "description": "Collection of inventory items available in the canteen, mapped to the menu.",
           "params": [
             {
-              "name": "menuItemId",
-              "description": "Unique identifier for the menu item."
+              "name": "itemId",
+              "description": "Unique identifier for the inventory item."
             }
           ]
         }
@@ -162,6 +162,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to support a college canteen ordering system, emphasizing simplicity and scalability. It incorporates the MenuItem and Order entities. We'll use simple collections without complex subcollections, to minimize security rule complexity and Firestore reads. The database should be easily debuggable, and it should authorize access solely on the `request.auth.uid` to prevent spoofing.\n\nTo achieve Authorization Independence, we'll use public access for `menuItems` collection, since they are not user-specific and should be accessible to anyone using the app.\n\nStructural Segregation is achieved by keeping `menuItems` as a separate collection, distinct from user-specific data such as `orders`. This simplifies security rules, as there is no need to differentiate access based on user roles within the same collection.\n\nAccess Modeling uses simple collections. Orders are placed under the `orders` collection.\n\nData Clarity and Predictability is maintained through consistent naming conventions and explicit state modeling. For example, the `orderDate` field in the `Order` entity is consistently named and formatted."
+    "reasoning": "The Firestore structure is designed to support a college canteen ordering system, emphasizing simplicity and scalability. It incorporates the MenuItem and Order entities. We'll use simple collections without complex subcollections, to minimize security rule complexity and Firestore reads. The database should be easily debuggable, and it should authorize access solely on the `request.auth.uid` to prevent spoofing.\n\nTo achieve Authorization Independence, we'll use public access for `inventory` collection, since they are not user-specific and should be accessible to anyone using the app.\n\nStructural Segregation is achieved by keeping `inventory` as a separate collection, distinct from user-specific data such as `orders`. This simplifies security rules, as there is no need to differentiate access based on user roles within the same collection.\n\nAccess Modeling uses simple collections. Orders are placed under the `orders` collection.\n\nData Clarity and Predictability is maintained through consistent naming conventions and explicit state modeling. For example, the `orderDate` field in the `Order` entity is consistently named and formatted."
   }
 }

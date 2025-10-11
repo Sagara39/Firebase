@@ -8,12 +8,12 @@ import MenuItemSkeleton from './MenuItemSkeleton';
 
 export default function Menu() {
   const firestore = useFirestore();
-  const menuItemsCollection = useMemoFirebase(
-    () => (firestore ? collection(firestore, 'menuItems') : null),
+  const inventoryCollection = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'inventory') : null),
     [firestore]
   );
   const { data: menuItems, isLoading } =
-    useCollection<MenuItem>(menuItemsCollection);
+    useCollection<MenuItem>(inventoryCollection);
 
   if (isLoading) {
     return (
