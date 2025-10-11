@@ -35,6 +35,12 @@
       "description": "A healthy and crisp garden salad.",
       "imageUrl": "https://images.unsplash.com/photo-1623489254660-db5b367881d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxnYXJkZW4lMjBzYWxhZHxlbnwwfHx8fDE3NTg5MTQwNTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "garden salad"
+    },
+    {
+      "id": "cream-bun",
+      "description": "A soft bun filled with delicious cream.",
+      "imageUrl": "https://storage.googleapis.com/aip-dev-images-prod/1e93c837-70e6-4272-9a3d-4c31045b130e.jpeg",
+      "imageHint": "cream bun"
     }
   ]
 }
