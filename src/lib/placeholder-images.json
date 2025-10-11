@@ -2,49 +2,49 @@
   "placeholderImages": [
     {
       "id": "1",
-      "name": "Croissant",
+      "name": "Cream bun",
       "description": "A freshly baked, flaky croissant.",
       "imageUrl": "/croissant.jpg",
       "imageHint": "croissant pastry"
     },
     {
       "id": "2",
-      "name": "Coffee",
+      "name": "Fish bun",
       "description": "A cup of aromatic black coffee.",
       "imageUrl": "/coffee.jpg",
       "imageHint": "coffee cup"
     },
     {
       "id": "3",
-      "name": "Club Sandwich",
+      "name": "Viana bun",
       "description": "A delicious and healthy club sandwich.",
       "imageUrl": "/sandwich.jpg",
       "imageHint": "club sandwich"
     },
     {
       "id": "4",
-      "name": "Chocolate Cake",
+      "name": "Tea bun",
       "description": "A slice of rich chocolate cake.",
       "imageUrl": "/cake.jpg",
       "imageHint": "chocolate cake"
     },
     {
       "id": "5",
-      "name": "Orange Juice",
+      "name": "Elawalu rotti",
       "description": "A refreshing glass of orange juice.",
       "imageUrl": "/juice.jpg",
       "imageHint": "orange juice"
     },
     {
       "id": "6",
-      "name": "Garden Salad",
+      "name": "Sausage bun",
       "description": "A healthy and crisp garden salad.",
       "imageUrl": "/salad.jpg",
       "imageHint": "garden salad"
     },
     {
       "id": "7",
-      "name": "Cream Bun",
+      "name": "Original Cream Bun",
       "description": "A soft bun filled with delicious cream.",
       "imageUrl": "/Cream bun.jpg",
       "imageHint": "cream bun"
