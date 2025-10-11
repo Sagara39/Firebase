@@ -3,44 +3,44 @@
     {
       "id": "1",
       "name": "Cream bun",
-      "description": "A freshly baked, flaky croissant.",
-      "imageUrl": "/croissant.jpg",
-      "imageHint": "croissant pastry"
+      "description": "A soft bun filled with delicious cream.",
+      "imageUrl": "/Cream bun.jpg",
+      "imageHint": "cream bun"
     },
     {
       "id": "2",
       "name": "Fish bun",
-      "description": "A cup of aromatic black coffee.",
-      "imageUrl": "/coffee.jpg",
-      "imageHint": "coffee cup"
+      "description": "A savory bun with a fish filling.",
+      "imageUrl": "/fish-bun.jpg",
+      "imageHint": "fish bun"
     },
     {
       "id": "3",
       "name": "Viana bun",
-      "description": "A delicious and healthy club sandwich.",
-      "imageUrl": "/sandwich.jpg",
-      "imageHint": "club sandwich"
+      "description": "A delicious and popular Viana sausage bun.",
+      "imageUrl": "/viana-bun.jpg",
+      "imageHint": "sausage bun"
     },
     {
       "id": "4",
       "name": "Tea bun",
-      "description": "A slice of rich chocolate cake.",
-      "imageUrl": "/cake.jpg",
-      "imageHint": "chocolate cake"
+      "description": "A slightly sweet bun, perfect with tea.",
+      "imageUrl": "/tea-bun.jpg",
+      "imageHint": "tea bun"
     },
     {
       "id": "5",
       "name": "Elawalu rotti",
-      "description": "A refreshing glass of orange juice.",
-      "imageUrl": "/juice.jpg",
-      "imageHint": "orange juice"
+      "description": "A vegetable-filled flatbread, a local favorite.",
+      "imageUrl": "/elawalu-rotti.jpg",
+      "imageHint": "vegetable rotti"
     },
     {
       "id": "6",
       "name": "Sausage bun",
-      "description": "A healthy and crisp garden salad.",
-      "imageUrl": "/salad.jpg",
-      "imageHint": "garden salad"
+      "description": "A classic sausage bun.",
+      "imageUrl": "/sausage-bun.jpg",
+      "imageHint": "sausage bun"
     },
     {
       "id": "7",
