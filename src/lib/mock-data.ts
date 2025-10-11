@@ -21,7 +21,7 @@ export const placeholderMenuItems: MenuItem[] = [
     name: 'Croissant',
     description: 'A freshly baked, flaky croissant.',
     price: 2.5,
-    ...getImage('croissant'),
+    ...getImage('public/Cream bun.jpg'),
   },
   {
     id: '2',
