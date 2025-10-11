@@ -55,10 +55,10 @@ export default function CheckoutPage() {
                   <div className="flex-grow">
                     <p className="font-semibold">{item.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {item.quantity} x ${item.price.toFixed(2)}
+                      {item.quantity} x Rs.{item.price.toFixed(2)}
                     </p>
                   </div>
-                  <p className="font-bold text-lg text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold text-lg text-foreground">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
           <div className="flex justify-between items-center font-bold text-xl">
             <span>Total ({itemCount} {itemCount > 1 ? 'items' : 'item'})</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Rs.{total.toFixed(2)}</span>
           </div>
 
           <Separator />

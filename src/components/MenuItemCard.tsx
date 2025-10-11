@@ -39,7 +39,7 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <p className="text-lg font-bold text-primary">
-          ${item.price.toFixed(2)}
+          Rs.{item.price.toFixed(2)}
         </p>
         <Button size="sm" onClick={() => addToCart(item)}>
           <PlusCircle className="mr-2 h-4 w-4" />

@@ -62,7 +62,7 @@ export default function Cart() {
           <Separator />
           <div className="w-full flex justify-between items-center font-bold text-lg">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Rs.{total.toFixed(2)}</span>
           </div>
           <Button
             onClick={handleCheckout}

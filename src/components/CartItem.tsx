@@ -45,7 +45,7 @@ export default function CartItemComponent({ item }: { item: CartItem }) {
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+        <p className="font-bold">Rs.{(item.price * item.quantity).toFixed(2)}</p>
         <Button
             variant="ghost"
             size="icon"
