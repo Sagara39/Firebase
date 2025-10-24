@@ -20,8 +20,10 @@ export default function Cart() {
   const router = useRouter();
 
   const handleCheckout = () => {
-    router.push('/checkout');
-  }
+    if (itemCount > 0) {
+      router.push('/checkout');
+    }
+  };
 
   return (
     <Card className="shadow-lg">
@@ -60,13 +62,14 @@ export default function Cart() {
       {cartItems.length > 0 && (
         <CardFooter className="flex flex-col gap-4 p-4 border-t">
           <Separator />
-          <div className="w-full flex justify-between items-center font-bold text-lg">
+          <div className="w-full flex justify-between items-center font-bold text-3xl">
             <span>Total</span>
             <span>Rs.{total.toFixed(2)}</span>
           </div>
           <Button
             onClick={handleCheckout}
             className="w-full h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90"
+            disabled={itemCount === 0}
           >
             Checkout ({itemCount} {itemCount > 1 ? 'items' : 'item'})
           </Button>
